@@ -1,22 +1,21 @@
-License scope
+MIT License
 
-This project contains inherited code from lilhuu/Codex-Startup-Windows at
-10d986ca532564a7546c32838567eb01e94ef2dd, including code inherited from
-M1ddle0/codex-startup-animation and its parent repository.
+Copyright (c) 2026 Eri-Kashiwagi and contributors
 
-The referenced upstream version does not include an explicit license for
-that inherited code. This file does not grant new rights to that code or
-represent that the entire combined project is licensed under MIT.
-The license and redistribution permissions for the inherited code remain
-unresolved. Attribution records its origin and does not grant those rights.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The MIT license in licenses/MIT-new-components.txt applies only to the
-standalone newly added extension/video-wallpaper.mjs,
-extension/default-video.mjs, tools/build-release.ps1,
-tools/verify-package.ps1, and newly written documentation in this project.
-It does not relicense inherited files or modifications within those files.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Media files have a separate scope described in media/MEDIA_NOTICE.md.
-See THIRD_PARTY_NOTICES.md for source repositories and pinned versions.
-
-The combined project is not covered by a single open-source license.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -13,15 +13,15 @@
 | [Fei-Away/Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin) | [6fc42df48a6a5365011f55cc349e20c038e56d1d](https://github.com/Fei-Away/Codex-Dream-Skin/tree/6fc42df48a6a5365011f55cc349e20c038e56d1d) | 外观、透明面板与运行环境处理参考 |
 | [mytjxs/codex-startup-animation](https://github.com/mytjxs/codex-startup-animation) | [v1.0.0](https://github.com/mytjxs/codex-startup-animation/releases/tag/v1.0.0) | 启动动画与视频播放思路参考 |
 
-本次修改包括：替换角色图片与线稿、独立工作区视频、默认 MP4 载入、开屏结束后单次播放、设置和隐藏时暂停、结束后恢复原有外观，以及独立的便携发行构建。
+本次修改包括：加入 ChatGPT 娘化形象的图片与线稿、独立工作区视频、默认 MP4 载入、开屏结束后单次播放、设置和隐藏时暂停、结束后恢复原有外观，以及独立的便携发行构建。
 
 本项目为独立便携启动器，不依赖外部桌宠或既有本机状态。图片与视频设置使用独立的本机命名空间。
 
 ## 许可范围
 
-直接基础项目的 [来源说明](https://github.com/lilhuu/Codex-Startup-Windows/blob/main/docs/references.md) 记载继承版本未附明确 LICENSE。本项目保留该事实，不对整个继承实现统一授予 MIT。具体范围见根目录 LICENSE。
+本项目的原创代码、修改与文档采用根目录的 [MIT License](LICENSE)。第三方代码保留其原有权利与许可范围。
 
-上表中的 dragon-codex-boot 和 Codex-Dream-Skin 参考版本包含 MIT 许可。这里标明参考关系，不表示它们为其他上游代码或角色素材提供授权。
+直接基础项目的 [来源说明](https://github.com/lilhuu/Codex-Startup-Windows/blob/main/docs/references.md) 记载其继承版本未附明确 LICENSE；这些继承代码的授权仍待明确，本项目的 MIT 不替代上游授权。dragon-codex-boot 和 Codex-Dream-Skin 的参考版本包含 MIT 许可。
 
 ## 运行与制作工具
 

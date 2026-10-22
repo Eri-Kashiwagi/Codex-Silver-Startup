@@ -1,6 +1,8 @@
 {
   "name": "Codex Silver Startup",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "description": "ChatGPT 娘化形象的 Windows Codex 开屏与进入后角色动画",
+  "license": "MIT",
   "platform": "Windows 10/11 x64; Microsoft Store/MSIX Codex",
   "upstream": {
     "repository": "https://github.com/lilhuu/Codex-Startup-Windows",
@@ -33,7 +35,6 @@
     "使用说明.md",
     "THIRD_PARTY_NOTICES.md",
     "LICENSE",
-    "licenses/MIT-new-components.txt",
     "media/MEDIA_NOTICE.md"
   ],
   "sourceFiles": [
@@ -70,7 +71,6 @@
     "使用说明.md",
     "THIRD_PARTY_NOTICES.md",
     "LICENSE",
-    "licenses/MIT-new-components.txt",
     "media/MEDIA_NOTICE.md",
     ".gitignore",
     "CONTRIBUTING.md",

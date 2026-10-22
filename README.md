@@ -1,8 +1,8 @@
-# Codex Silver Startup
+# Codex Silver Startup · ChatGPT 娘化开屏动画
 
-给 Windows Codex 加上银发角色开屏和进入后的角色动画。下载便携包、完整解压，双击 **启动 Codex.exe** 即可使用随附图片和视频。也可以通过设置更换自己的图片、文字和视频。
+以 **ChatGPT 娘化形象** 为主题，为 Windows Codex 加入开屏动画和进入后的角色动画。下载便携包、完整解压，双击 **启动 Codex.exe** 即可使用随附图片和视频。也可以通过设置更换自己的图片、文字和视频。
 
-[下载 Windows 便携包](https://github.com/Eri-Kashiwagi/Codex-Silver-Startup/releases/latest/download/Codex-Silver-Startup-0.1.0-windows-x64.zip) · [查看发布版本](https://github.com/Eri-Kashiwagi/Codex-Silver-Startup/releases) · [源码仓库](https://github.com/Eri-Kashiwagi/Codex-Silver-Startup)
+[下载 Windows 便携包](https://github.com/Eri-Kashiwagi/Codex-Silver-Startup/releases/latest/download/Codex-Silver-Startup-0.1.1-windows-x64.zip) · [查看发布版本](https://github.com/Eri-Kashiwagi/Codex-Silver-Startup/releases) · [源码仓库](https://github.com/Eri-Kashiwagi/Codex-Silver-Startup)
 
 ## 普通用户怎么用
 
@@ -53,10 +53,10 @@ powershell -NoProfile -File tools/verify-package.ps1
 | [Fei-Away/Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin) | 外观面板、透明背景与运行环境处理参考 |
 | [mytjxs/codex-startup-animation](https://github.com/mytjxs/codex-startup-animation) | 启动动画与视频播放思路参考 |
 
-本项目在上述基础上加入银发角色素材、进入后的单次角色视频、视频结束后的界面恢复，以及便携发布包。参考版本和修改范围见 [来源与修改说明](THIRD_PARTY_NOTICES.md)。
+本项目在上述基础上加入 ChatGPT 娘化形象素材、进入后的单次角色视频、视频结束后的界面恢复，以及便携发布包。参考版本和修改范围见 [来源与修改说明](THIRD_PARTY_NOTICES.md)。
 
 ## 许可与素材
 
-继承代码与新增代码的许可范围见 [LICENSE](LICENSE)，默认图片与视频的使用范围见 [素材说明](media/MEDIA_NOTICE.md)。
+本项目的原创代码、修改与文档采用 [MIT License](LICENSE)。第三方代码的来源与许可见 [来源说明](THIRD_PARTY_NOTICES.md)，默认图片与视频见 [素材说明](media/MEDIA_NOTICE.md)。
 
 本项目是非官方社区工具，与 OpenAI 无官方关联。

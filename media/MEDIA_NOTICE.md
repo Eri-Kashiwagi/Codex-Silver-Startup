@@ -2,7 +2,7 @@
 
 程序随附以下默认素材：
 
-- assets/avatar.jpg、assets/artwork.jpg：同一张银白发角色图片，用于开屏头像和人物显现。
+- assets/avatar.jpg、assets/artwork.jpg：同一张 ChatGPT 娘化形象图片，银白发造型，用于开屏头像和人物显现。
 - assets/contours.js：从开屏图片提取的轮廓数据。
 - assets/background.jpg：角色视频对应的静态背景图。
 - assets/background.mp4：约 15 秒、1280×720、24 fps、静音的单次角色动作视频。

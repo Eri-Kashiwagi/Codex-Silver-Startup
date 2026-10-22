@@ -35,9 +35,6 @@
 !/extension/windows.mjs
 !/image-settings.js
 !/index.html
-!/licenses/
-/licenses/*
-!/licenses/MIT-new-components.txt
 !/media/
 /media/*
 !/media/MEDIA_NOTICE.md
