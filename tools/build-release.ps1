@@ -35,9 +35,9 @@ foreach($file in $project.runtimeFiles){
 }
 $launcherSource=Project-File 'windows/Launcher.cs'
 $common=@('/nologo','/codepage:65001','/target:winexe','/optimize+','/reference:System.Windows.Forms.dll',('/win32icon:'+(Project-File 'assets/windows-codex.ico')))
-& $compiler @common ('/out:'+(Join-Path $staging '启动 Codex.exe')) $launcherSource
+& $compiler @common ('/out:'+(Join-Path $staging 'Start Codex.exe')) $launcherSource
 if($LASTEXITCODE -ne 0){throw 'Failed to build startup entry.'}
-& $compiler @common /define:SETTINGS_ENTRY ('/out:'+(Join-Path $staging '图片与动画设置.exe')) $launcherSource
+& $compiler @common /define:SETTINGS_ENTRY ('/out:'+(Join-Path $staging 'Animation Settings.exe')) $launcherSource
 if($LASTEXITCODE -ne 0){throw 'Failed to build settings entry.'}
 
 Add-Type -AssemblyName System.IO.Compression
@@ -60,7 +60,7 @@ function Write-Zip([string]$base,[string[]]$files,[string]$path,[string]$prefix)
         }finally{$archive.Dispose()}
     }finally{$stream.Dispose()}
 }
-$runtimeFiles=@($project.runtimeFiles)+@('启动 Codex.exe','图片与动画设置.exe')
+$runtimeFiles=@($project.runtimeFiles)+@('Start Codex.exe','Animation Settings.exe')
 Write-Zip $staging $runtimeFiles $portableZip $name
 Write-Zip $root @($project.sourceFiles) $sourceZip ('Codex-Silver-Startup-'+$project.version+'-source')
 

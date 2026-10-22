@@ -28,11 +28,11 @@ try{
             $sessionPath=Join-Path $logDirectory 'session.json'
             $session=$null
             try{$session=Get-Content -LiteralPath $sessionPath -Raw -ErrorAction Stop | ConvertFrom-Json}catch{}
-            if(-not $session -or $session.pid -ne $existing.ProcessId -or $session.packageFullName -ne $package.PackageFullName -or $session.port -lt 1 -or $session.port -gt 65535){throw 'Codex 正在运行，但本次未从动画入口启动。请保存工作，在菜单或托盘中彻底退出 Codex，再打开「图片与动画设置」。'}
+            if(-not $session -or $session.pid -ne $existing.ProcessId -or $session.packageFullName -ne $package.PackageFullName -or $session.port -lt 1 -or $session.port -gt 65535){throw 'Codex is already running without the animation launcher. Save your work, fully quit Codex from its menu or tray, then open Animation Settings.exe.'}
             $result=& $node (Join-Path $root 'extension\windows.mjs') --port $session.port --pid $existing.ProcessId --exe $executable --sid $sid --package $package.PackageFullName --settings 2>&1
             $settingsExit=$LASTEXITCODE
             foreach($line in $result){Write-Log ([string]$line)}
-            if($settingsExit -ne 0){throw ('设置打开失败：'+($result -join [Environment]::NewLine))}
+            if($settingsExit -ne 0){throw ('Could not open settings: '+($result -join [Environment]::NewLine))}
             if(-not $ProfileDirectory){Add-Type -Path (Join-Path $PSScriptRoot 'Activation.cs');[PackageStartup]::Launch($runtime.ApplicationId,'') | Out-Null}
             exit 0
         }
@@ -57,12 +57,12 @@ try{
     $result=& $node @nodeArgs 2>&1
     $exitCode=$LASTEXITCODE
     foreach($line in $result){Write-Log ([string]$line)}
-    if($exitCode -ne 0){throw ('动画接入失败。'+[Environment]::NewLine+($result -join [Environment]::NewLine))}
+    if($exitCode -ne 0){throw ('Could not attach the animation.'+[Environment]::NewLine+($result -join [Environment]::NewLine))}
 }catch{
     Write-Log ('ERROR: '+$_.Exception.Message)
     if(-not $NoDialog){
         Add-Type -AssemblyName System.Windows.Forms
-        [Windows.Forms.MessageBox]::Show(($_.Exception.Message+[Environment]::NewLine+[Environment]::NewLine+'官方安装包未修改。请完全退出后从官方图标重新打开。'+[Environment]::NewLine+'日志：'+$logFile),'Codex 启动动画',[Windows.Forms.MessageBoxButtons]::OK,[Windows.Forms.MessageBoxIcon]::Warning) | Out-Null
+        [Windows.Forms.MessageBox]::Show(($_.Exception.Message+[Environment]::NewLine+[Environment]::NewLine+'The official installation is unchanged. Fully quit Codex and reopen it from the official icon.'+[Environment]::NewLine+'Log: '+$logFile),'Codex Silver Startup',[Windows.Forms.MessageBoxButtons]::OK,[Windows.Forms.MessageBoxIcon]::Warning) | Out-Null
     }
     exit 1
 }finally{if($locked){$lock.ReleaseMutex()};$lock.Dispose()}

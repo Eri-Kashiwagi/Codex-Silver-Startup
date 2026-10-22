@@ -1,6 +1,8 @@
 (() => {
   'use strict';
   const $ = selector => document.querySelector(selector);
+  const i18n=window.SilverI18n,t=(key,values)=>i18n.t(key,values);
+  i18n.apply(document);
   const duration = 12000;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const native = !window.AEMEATH_EXTERNAL && Boolean(window.webkit?.messageHandlers?.launcher);
@@ -247,13 +249,14 @@
       root.dataset.stage=s>=11?'shutter':s<1.15?'pulse':s<4.18?'identity':s<4.74?'dispersing':s<5.08?'scattered':s<7.18?'drawing':s<7.43?'colorize':'portrait';
     }
   }
-  function updateButton() { pause.textContent=playing?'暂停':'继续'; root.dataset.playing=String(playing); }
+  function updateButton() { pause.textContent=t(completed?'ended':playing?'pause':'resume'); root.dataset.playing=String(playing); }
   function stop() { playing=false; cancelAnimationFrame(frame); frame=0; updateButton(); }
   function finish(skipped=false) {
     stop(); elapsed=duration; render(elapsed); completed=true;
     root.classList.add('finished'); root.dataset.completed='true';
-    pause.textContent='已结束'; pause.disabled=true;
-    $('.end-description').textContent=mode==='launch'?'正在显示 Codex…':skipped?'已跳过开场动画':'开场预览结束';
+    pause.textContent=t('ended'); pause.disabled=true;
+    $('.end-description').dataset.i18n=mode==='launch'?'showingCodex':skipped?'skipped':'previewFinished';
+    $('.end-description').textContent=t($('.end-description').dataset.i18n);
     send('complete');
   }
   function tick(now) {
@@ -299,8 +302,8 @@
   window.launcherUI={
     openSettings,
     beginLaunch(){mode='launch';document.body.classList.add('launch-mode');replay();},
-    error(message){stop();scene.style.opacity='0';root.classList.add('finished');$('.end-description').textContent=message;$('.eyebrow').textContent='LAUNCH UNAVAILABLE';$('.end-screen h1').textContent='暂时无法打开 Codex';},
-    waiting(){ $('.end-description').textContent='正在等待 Codex 打开…'; }
+    error(message){stop();scene.style.opacity='0';root.classList.add('finished');delete $('.end-description').dataset.i18n;$('.end-description').textContent=message;$('.eyebrow').textContent='LAUNCH UNAVAILABLE';$('.end-screen h1').dataset.i18n='launchUnavailable';$('.end-screen h1').textContent=t('launchUnavailable');},
+    waiting(){ $('.end-description').dataset.i18n='waiting';$('.end-description').textContent=t('waiting'); }
   };
   if(native){
     document.body.classList.add('native');
@@ -310,42 +313,50 @@
   let savedImages={},pendingImages={},busy=false;
   const settings=$('#settings-dialog'),status=$('#settings-status');
   const textFields=[
-    {key:'introTitle',input:'#intro-title',target:'.boot-title',fallback:'Codex',limit:16},
-    {key:'introCaption',input:'#intro-caption',target:'.boot-caption',fallback:'欢迎回来 · READY TO CREATE',limit:48},
-    {key:'artworkSubtitle',input:'#artwork-subtitle',target:'#subtitle',fallback:'故事从这里，继续。',limit:60}
+    {key:'introTitle',input:'#intro-title',target:'.boot-title',fallback:'defaultTitle',limit:16},
+    {key:'introCaption',input:'#intro-caption',target:'.boot-caption',fallback:'defaultCaption',limit:48},
+    {key:'artworkSubtitle',input:'#artwork-subtitle',target:'#subtitle',fallback:'defaultSubtitle',limit:60}
   ];
-  const textValue=(images,field)=>typeof images[field.key]==='string'?images[field.key].slice(0,field.limit):field.fallback;
+  const textValue=(images,field)=>typeof images[field.key]==='string'?images[field.key].slice(0,field.limit):t(field.fallback);
+  function applyLanguage(images){
+    i18n.setLocale(images.language);i18n.apply(document);updateButton();
+    if(window.frameElement)window.frameElement.title=t('windowLabel');
+    $('#language-select').value=i18n.locale;
+  }
   function thumbnails(){
     $('#avatar-preview').src=pendingImages.avatar||assets.avatar;
     $('#artwork-preview').src=pendingImages.artwork||assets.artwork;
     $('#wallpaper-strength').value=String(pendingImages.wallpaperStrength??56);
     $('#wallpaper-motion').checked=pendingImages.wallpaperMotion!==false;
-    $('#wallpaper-video-name').textContent=pendingImages.backgroundVideoName||'未选择个人视频；如有随附动态素材则自动播放。';
+    $('#wallpaper-video-name').textContent=pendingImages.backgroundVideoName||t('noPersonalVideo');
     $('#wallpaper-value').textContent=$('#wallpaper-strength').value+'%';
     for(const field of textFields)$(field.input).value=textValue(pendingImages,field);
   }
   function openSettings(){
     if(mode==='launch'||settings.open)return;
-    hiddenPause=false;stop();pendingImages={...savedImages};thumbnails();
-    status.textContent='图片与文字保存在本机。修改后点击「保存并预览」；关闭则放弃本次修改。';
+    hiddenPause=false;stop();pendingImages={...savedImages};applyLanguage(pendingImages);thumbnails();
+    status.textContent=t('editing');
     settings.returnValue='';settings.showModal();send('settings-open');
   }
   function setBusy(value){
     busy=value;
-    settings.querySelectorAll('input,button').forEach(node=>node.disabled=value);
+    settings.querySelectorAll('input,button,select').forEach(node=>node.disabled=value);
   }
   async function applyImages(images){
     releaseIdentityTexture();
     art.src=images.artwork||assets.artwork;$('.avatar').src=images.avatar||assets.avatar;
     await Promise.all([art,$('.avatar')].map(img=>img.decode()));
     paths=preparePaths(images.contours||window.CONTOUR_PATHS||[]);fragments=prepareFragments(paths);lastTrace=-1;
-    if(!paths.length)throw new Error('图片轮廓数据缺失');
+    if(!paths.length)throw new Error(t('contoursMissing'));
     for(const field of textFields)$(field.target).textContent=textValue(images,field);
     $('.boot-title').classList.toggle('long-title',Array.from(textValue(images,textFields[0])).length>6);
     send('background',{image:assets.wallpaper||art.src,video:images.backgroundVideo||null,strength:images.wallpaperStrength??56,motion:images.wallpaperMotion!==false});
   }
   for(const field of textFields)$(field.input).addEventListener('input',event=>{
     pendingImages[field.key]=event.target.value.slice(0,field.limit);
+  });
+  $('#language-select').addEventListener('change',event=>{
+    pendingImages.language=event.target.value;applyLanguage(pendingImages);thumbnails();status.textContent=t('editing');
   });
   $('#wallpaper-strength').addEventListener('input',event=>{
     pendingImages.wallpaperStrength=Number(event.target.value);
@@ -354,8 +365,8 @@
   $('#wallpaper-motion').addEventListener('change',event=>{pendingImages.wallpaperMotion=event.target.checked;});
   $('#wallpaper-video').addEventListener('change',async event=>{
     const file=event.target.files[0];if(!file)return;
-    setBusy(true);status.textContent='正在检查进入 Codex 后播放的视频…';
-    try{pendingImages={...pendingImages,...await window.imageSettings.importVideo(file)};thumbnails();status.textContent='动态视频已准备好，点击「保存并预览」应用。';}
+    setBusy(true);status.textContent=t('checkingVideo');
+    try{pendingImages={...pendingImages,...await window.imageSettings.importVideo(file)};thumbnails();status.textContent=t('videoReady');}
     catch(error){status.textContent=error.message;}
     finally{setBusy(false);event.target.value='';}
   });
@@ -365,31 +376,33 @@
   settings.addEventListener('cancel',event=>{if(busy)event.preventDefault();});
   settings.addEventListener('close',()=>{
     if(!loaded)return;
+    applyLanguage(savedImages);
     if(settings.returnValue==='preview'){send('settings-close');replay();}
     else finish(true);
   });
   for(const kind of ['avatar','artwork'])$('#'+kind+'-file').addEventListener('change',async event=>{
     const file=event.target.files[0];if(!file)return;
-    setBusy(true);status.textContent=kind==='artwork'?'正在为新背景生成线稿…':'正在准备头像…';
+    setBusy(true);status.textContent=t(kind==='artwork'?'tracing':'preparingAvatar');
     // Let the progress text paint before the one-time contour computation.
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     try{
       pendingImages={...pendingImages,...await window.imageSettings.importImage(file,kind)};thumbnails();
-      status.textContent='图片已准备好，点击「保存并预览」应用。';
+      status.textContent=t('imageReady');
     }catch(error){status.textContent=error.message;}
     finally{setBusy(false);event.target.value='';}
   });
-  $('#reset-images').addEventListener('click',()=>{pendingImages={};thumbnails();status.textContent='已选用默认图片、文字和背景显现程度，点击「保存并预览」应用。';});
+  $('#reset-images').addEventListener('click',()=>{pendingImages={language:i18n.locale};thumbnails();status.textContent=t('resetReady');});
   $('#preview-images').addEventListener('click',async()=>{
-    setBusy(true);status.textContent='正在保存…';
+    setBusy(true);status.textContent=t('saving');
     try{
       await applyImages(pendingImages);await window.imageSettings.save(pendingImages);savedImages={...pendingImages};settings.close('preview');
-    }catch(error){await applyImages(savedImages);status.textContent='保存失败，原设置已保留：'+error.message;}
+    }catch(error){await applyImages(savedImages);status.textContent=t('saveFailed',{error:error.message});}
     finally{setBusy(false);}
   });
   window.imageSettings.load().catch(()=>({})).then(async images=>{
     savedImages=images;
-    try{await applyImages(images);}catch{savedImages={};await applyImages({});}
+    applyLanguage(images);
+    try{await applyImages(images);}catch{savedImages={language:i18n.locale};await applyImages(savedImages);}
     ready();
   }).catch(failed);
 })();

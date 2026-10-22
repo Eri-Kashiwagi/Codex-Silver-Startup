@@ -82,7 +82,7 @@ export function installRenderer(payload, mount, createMotion) {
     liveMotion?.setActive?.(false);
     ready=false;completed=false;
     priorFocus=document.activeElement;phase=settings?'settings':'loading';
-    frame=document.createElement('iframe');frame.id='aemeath-extension-overlay';frame.title='启动动画';
+    frame=document.createElement('iframe');frame.id='aemeath-extension-overlay';frame.title='Startup animation';
     Object.assign(frame.style,{position:'fixed',inset:'0',width:'100%',height:'100%',border:'0',zIndex:'2147483646',background:'transparent',colorScheme:'dark'});
     const current=frame;
     current.addEventListener('load',()=>{

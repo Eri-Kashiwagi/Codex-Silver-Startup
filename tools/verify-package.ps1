@@ -11,7 +11,7 @@ foreach($artifact in $manifest.files){
     if((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $artifact.sha256){throw 'ZIP hash mismatch.'}
     $source=$artifact.file -like '*-source.zip'
     $prefix=if($source){'Codex-Silver-Startup-'+$project.version+'-source/'}else{'Codex-Silver-Startup-'+$project.version+'-windows-x64/'}
-    $files=if($source){@($project.sourceFiles)}else{@($project.runtimeFiles)+@('启动 Codex.exe','图片与动画设置.exe')}
+    $files=if($source){@($project.sourceFiles)}else{@($project.runtimeFiles)+@('Start Codex.exe','Animation Settings.exe')}
     $expected=@($files | ForEach-Object {$prefix+$_.Replace('\','/')})
     $zip=[IO.Compression.ZipFile]::OpenRead($path)
     try{

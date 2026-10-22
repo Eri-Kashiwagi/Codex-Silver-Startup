@@ -57,3 +57,18 @@
 !/windows/launch.ps1
 !/windows/verify-port.ps1
 !/使用说明.md
+
+# Reviewed language catalogs and translated repository entry pages.
+!/i18n.js
+!/locales/
+/locales/*
+!/locales/en.js
+!/locales/zh-CN.js
+!/locales/zh-TW.js
+!/locales/ja.js
+!/locales/ru.js
+!/README.zh-CN.md
+!/README.zh-TW.md
+!/README.ja.md
+!/README.ru.md
+!/tools/i18n.test.mjs

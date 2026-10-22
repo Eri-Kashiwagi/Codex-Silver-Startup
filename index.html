@@ -1,25 +1,31 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'none'">
-  <title>Codex · 12 秒启动动画</title>
+  <title data-i18n="pageTitle">Codex · Startup animation</title>
   <link rel="stylesheet" href="style.css">
   <script src="assets/contours.js" defer></script>
+  <script src="locales/en.js" defer></script>
+  <script src="locales/zh-CN.js" defer></script>
+  <script src="locales/zh-TW.js" defer></script>
+  <script src="locales/ja.js" defer></script>
+  <script src="locales/ru.js" defer></script>
+  <script src="i18n.js" defer></script>
   <script src="image-settings.js" defer></script>
   <script src="animation.js" defer></script>
 </head>
 <body>
   <main class="preview">
     <header class="preview-heading"><span><i></i> CODEX</span><span>STARTUP SEQUENCE / 01</span></header>
-    <section class="window" aria-label="Codex启动动画">
+    <section class="window" data-i18n-aria-label="windowLabel" aria-label="Codex startup animation">
       <div class="end-screen" aria-live="polite">
         <span class="end-star">✧</span>
         <p class="eyebrow">CONNECTION ESTABLISHED</p>
-        <h1>准备好了，开始创作。</h1>
-        <p class="end-description">12 秒开场预览结束</p>
-        <button class="replay-end" type="button">再看一次 <span>↻</span></button>
+        <h1 data-i18n="endTitle">Ready. Let’s create.</h1>
+        <p class="end-description" data-i18n="endDescription">12-second preview complete</p>
+        <button class="replay-end" type="button" data-i18n="replayEnd">Watch again ↻</button>
       </div>
       <div class="scene" aria-hidden="true">
         <div class="artwork-plane"><img class="artwork" src="assets/artwork.jpg" alt="" decoding="async" fetchpriority="high"></div>
@@ -28,7 +34,7 @@
         <div class="scanlines"></div>
         <div class="light-sweep"></div>
         <div class="particles"></div>
-        <div class="hud"><div class="portrait-title">Codex<span class="portrait-caption">欢迎回来，我的架构师<br>GO WILD, MY ARCHITECT</span></div>
+        <div class="hud"><div class="portrait-title">Codex<span class="portrait-caption"><span data-i18n="portraitWelcome">Welcome back, my architect</span><br>GO WILD, MY ARCHITECT</span></div>
           <div class="corner top-left"></div><div class="corner top-right"></div>
           <div class="corner bottom-left"></div><div class="corner bottom-right"></div>
           <div class="sync">
@@ -36,7 +42,7 @@
             <div class="sync-track"><div class="sync-fill"></div></div>
             <span class="sync-phase">INITIALIZING</span>
           </div>
-          <div class="subtitle"><span id="subtitle">从这里，开始你的下一次创作。</span></div>
+          <div class="subtitle"><span id="subtitle">Your story continues here.</span></div>
           <div class="coordinates"><span>RESONANCE / CODEX</span><span id="timecode">00:00:00</span></div>
         </div>
         <div class="boot-grid"></div>
@@ -59,38 +65,47 @@
       </div>
       <div class="shutter-line" aria-hidden="true"></div>
       <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
-      <button id="image-settings" type="button">图片设置</button>
-      <button class="skip" type="button" title="跳过动画（Esc）" aria-label="跳过动画">CLICK / ESC TO SKIP</button>
-      <p id="asset-error" hidden>动画素材加载失败，请确认 assets 文件夹完整。</p>
+      <button id="image-settings" type="button" data-i18n="settingsButton">Animation settings</button>
+      <button class="skip" type="button" data-i18n="skip" data-i18n-title="skipTitle" data-i18n-aria-label="skipTitle" title="Skip animation (Esc)" aria-label="Skip animation (Esc)">CLICK / ESC TO SKIP</button>
+      <p id="asset-error" data-i18n="assetError" hidden>Animation assets could not load. Check that the assets folder is complete.</p>
       <dialog id="settings-dialog" aria-labelledby="settings-title">
-        <form method="dialog"><button class="settings-close" aria-label="关闭图片设置">×</button></form>
-        <p class="eyebrow">YOUR STARTUP</p><h2 id="settings-title">换成你喜欢的画面</h2>
-        <p class="settings-description">自定义两张图片和下方文字，留空可隐藏对应文字。</p>
+        <form method="dialog"><button class="settings-close" data-i18n-aria-label="closeSettings" aria-label="Close settings">×</button></form>
+        <p class="eyebrow">YOUR STARTUP</p><h2 id="settings-title" data-i18n="settingsTitle">Make it your own</h2>
+        <p class="settings-description" data-i18n="settingsDescription">Choose your images and text. Leave a text field empty to hide it.</p>
+        <label class="language-setting" for="language-select"><span data-i18n="language">Language</span>
+          <select id="language-select">
+            <option value="en" lang="en">English</option>
+            <option value="zh-CN" lang="zh-CN">简体中文</option>
+            <option value="zh-TW" lang="zh-TW">繁體中文</option>
+            <option value="ja" lang="ja">日本語</option>
+            <option value="ru" lang="ru">Русский</option>
+          </select><small data-i18n="languageHint">Applies when you select Save and preview.</small>
+        </label>
         <div class="image-choices">
-          <label class="image-choice"><img id="avatar-preview" src="assets/avatar.jpg" alt="当前头像"><span>前半段头像</span><small>方形图片效果最好</small><span class="choose-label">更换头像</span><input id="avatar-file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="更换头像"></label>
-          <label class="image-choice"><img id="artwork-preview" src="assets/artwork.jpg" alt="当前背景"><span>后半段背景</span><small>支持 GIF 动图 · 自动生成线稿</small><span class="choose-label">更换背景</span><input id="artwork-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="更换背景"></label>
+          <label class="image-choice"><img id="avatar-preview" src="assets/avatar.jpg" data-i18n-alt="avatarAlt" alt="Current avatar"><span data-i18n="avatarLabel">Opening avatar</span><small data-i18n="avatarHint">Square images work best</small><span class="choose-label" data-i18n="changeAvatar">Change avatar</span><input id="avatar-file" type="file" accept="image/png,image/jpeg,image/webp" data-i18n-aria-label="changeAvatar" aria-label="Change avatar"></label>
+          <label class="image-choice"><img id="artwork-preview" src="assets/artwork.jpg" data-i18n-alt="artworkAlt" alt="Current background"><span data-i18n="artworkLabel">Reveal background</span><small data-i18n="artworkHint">GIF supported · outlines generated automatically</small><span class="choose-label" data-i18n="changeArtwork">Change background</span><input id="artwork-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" data-i18n-aria-label="changeArtwork" aria-label="Change background"></label>
         </div>
         <div class="text-settings">
-          <label for="intro-title">前半段 · 头像下方标题<input id="intro-title" type="text" maxlength="16" autocomplete="off"><small>最多 16 字</small></label>
-          <label for="intro-caption">前半段 · 标题下方小字<input id="intro-caption" type="text" maxlength="48" autocomplete="off"><small>最多 48 字</small></label>
-          <label class="text-wide" for="artwork-subtitle">后半段 · 背景下方字幕<input id="artwork-subtitle" type="text" maxlength="60" autocomplete="off"><small>最多 60 字</small></label>
+          <label for="intro-title"><span data-i18n="introTitleLabel">Title below the avatar</span><input id="intro-title" type="text" maxlength="16" autocomplete="off"><small data-i18n="limit16">Up to 16 characters</small></label>
+          <label for="intro-caption"><span data-i18n="introCaptionLabel">Caption below the title</span><input id="intro-caption" type="text" maxlength="48" autocomplete="off"><small data-i18n="limit48">Up to 48 characters</small></label>
+          <label class="text-wide" for="artwork-subtitle"><span data-i18n="subtitleLabel">Subtitle on the background</span><input id="artwork-subtitle" type="text" maxlength="60" autocomplete="off"><small data-i18n="limit60">Up to 60 characters</small></label>
         </div>
-        <label class="wallpaper-setting" for="wallpaper-strength"><span>Codex 背景显现程度</span><output id="wallpaper-value">42%</output><input id="wallpaper-strength" type="range" min="0" max="75" step="1" value="42"><small>角色动画铺满窗口，结束后恢复原界面。0% 为不显示背景。</small></label>
-        <label class="motion-setting"><input id="wallpaper-motion" type="checkbox" checked> 进入 Codex 后播放角色动画，结束后恢复原界面</label>
-        <label class="video-choice">进入 Codex 后的动态背景（独立于开屏图片）<input id="wallpaper-video" type="file" accept="video/mp4,video/webm"><small id="wallpaper-video-name"></small></label>
-        <button id="clear-wallpaper-video" type="button">使用随附背景视频</button>
-        <p id="settings-status" role="status">图片保存在本机，不会上传。非标准比例会居中裁切。</p>
-        <div class="settings-actions"><button id="reset-images" type="button">恢复默认图片与文字</button><button id="preview-images" type="button">保存并预览</button></div>
-        <button id="restore-appearance" type="button" hidden>关闭美化，恢复 Codex 外观</button>
+        <label class="wallpaper-setting" for="wallpaper-strength"><span data-i18n="strengthLabel">Background visibility in Codex</span><output id="wallpaper-value">42%</output><input id="wallpaper-strength" type="range" min="0" max="75" step="1" value="42"><small data-i18n="strengthHint">The video fills the window, then restores the original appearance. Set 0% to hide the background.</small></label>
+        <label class="motion-setting"><input id="wallpaper-motion" type="checkbox" checked><span data-i18n="motionLabel">Play the character video after startup, then restore the original appearance</span></label>
+        <label class="video-choice"><span data-i18n="videoLabel">Video after startup (separate from the opening images)</span><input id="wallpaper-video" type="file" accept="video/mp4,video/webm"><small id="wallpaper-video-name"></small></label>
+        <button id="clear-wallpaper-video" type="button" data-i18n="bundledVideo">Use bundled video</button>
+        <p id="settings-status" role="status">Images stay on this device.</p>
+        <div class="settings-actions"><button id="reset-images" type="button" data-i18n="reset">Reset images and text</button><button id="preview-images" type="button" data-i18n="savePreview">Save and preview</button></div>
+        <button id="restore-appearance" type="button" data-i18n="restore" hidden>Turn off styling and restore Codex</button>
       </dialog>
     </section>
     <footer class="controls">
-      <div class="playback-buttons"><button id="replay" type="button" aria-label="重播 12 秒动画">↻ <span>重播</span></button><button id="pause" type="button">暂停</button></div>
-      <input id="timeline" aria-label="动画时间轴" type="range" min="0" max="12" step="0.01" value="0">
+      <div class="playback-buttons"><button id="replay" type="button" data-i18n-aria-label="replayLabel" aria-label="Replay the 12-second animation">↻ <span data-i18n="replay">Replay</span></button><button id="pause" type="button">Pause</button></div>
+      <input id="timeline" data-i18n-aria-label="timeline" aria-label="Animation timeline" type="range" min="0" max="12" step="0.01" value="0">
       <output id="elapsed">00.0 <span>/ 12.0s</span></output>
-      <button class="native-launch" type="button" hidden>播放并打开 Codex ↗</button>
+      <button class="native-launch" type="button" data-i18n="nativeLaunch" hidden>Play and open Codex ↗</button>
     </footer>
-    <p class="preview-note">12 秒 · 可随时跳过<span>画面百分比为动画进度</span></p>
+    <p class="preview-note"><span data-i18n="previewNote">12 seconds · skip anytime</span><span data-i18n="progressNote">The percentage shows animation progress</span></p>
   </main>
 </body>
 </html>

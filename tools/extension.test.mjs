@@ -17,5 +17,5 @@ class FakeSocket extends EventTarget{
 test('请求匹配、错误和超时后可正常关闭',async()=>{
   const client=await connect('ws://test',FakeSocket);
   assert.deepEqual(await Promise.all([client.call('first'),client.call('second')]),[{ok:'first'},{ok:'second'}]);
-  await assert.rejects(client.call('error'),/denied/);await assert.rejects(client.call('timeout',{},10),/超时/);client.close();
+  await assert.rejects(client.call('error'),/denied/);await assert.rejects(client.call('timeout',{},10),/timed out/);client.close();
 });

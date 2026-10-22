@@ -64,3 +64,11 @@ body.embedded .end-screen,body.native.launch-mode.closing .end-screen{visibility
 .portrait-title{position:absolute;left:6%;top:38%;font:600 clamp(36px,6vw,88px)/1.1 Segoe UI,sans-serif;letter-spacing:-.04em;color:#c2fff3;opacity:0;text-shadow:0 0 32px #70f5d42a}
 .portrait-caption{display:block;margin-top:20px;font:12px/1.8 Microsoft YaHei,Segoe UI,sans-serif;letter-spacing:3px;color:#c4dce5}
 @media(prefers-reduced-motion:reduce){.portrait-title{transition:none}}
+.language-setting{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 16px;margin:0 0 20px;color:#c7aebb;font-size:12px}
+.language-setting select{max-width:100%;padding:8px 12px;border:1px solid #63465c;border-radius:6px;background:#241b26;color:#f7eef2;font:inherit}
+.language-setting small{grid-column:1/-1;color:#a18a99;font-size:10px;line-height:1.6}
+select:focus-visible{outline:2px solid #f2aac2;outline-offset:5px}
+.image-choice>small,.settings-description{line-height:1.6}
+.settings-actions button{overflow-wrap:anywhere}
+.motion-setting input{flex-shrink:0}
+html:lang(ru) .portrait-caption{letter-spacing:1px;max-width:40vw}

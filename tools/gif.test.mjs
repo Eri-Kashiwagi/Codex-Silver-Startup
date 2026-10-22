@@ -15,7 +15,7 @@ async function removeFixture(fixture){
 test('original JPEG default remains available without GIF assets',async()=>{
   const fixture=await mkdtemp(join(tmpdir(),'codex-jpeg-'));
   try{
-    for(const file of ['index.html','style.css','image-settings.js','animation.js','extension','assets'])await cp(new URL(file,root),join(fixture,file),{recursive:true});
+    for(const file of ['index.html','style.css','i18n.js','locales','image-settings.js','animation.js','extension','assets'])await cp(new URL(file,root),join(fixture,file),{recursive:true});
     await rm(join(fixture,'assets/artwork.gif'),{force:true});
     await rm(join(fixture,'assets/artwork-contours.js'),{force:true});
     const code=await buildInjection(fixture);
@@ -26,7 +26,7 @@ test('original JPEG default remains available without GIF assets',async()=>{
 test('injection uses animated artwork and its matching contours when provided',async()=>{
   const fixture=await mkdtemp(join(tmpdir(),'codex-gif-'));
   try{
-    for(const file of ['index.html','style.css','image-settings.js','animation.js','extension','assets'])await cp(new URL(file,root),join(fixture,file),{recursive:true});
+    for(const file of ['index.html','style.css','i18n.js','locales','image-settings.js','animation.js','extension','assets'])await cp(new URL(file,root),join(fixture,file),{recursive:true});
     const gif=Buffer.from('GIF89a animated fixture');
     await writeFile(join(fixture,'assets/artwork.gif'),gif);
     await writeFile(join(fixture,'assets/artwork-contours.js'),'window.CONTOUR_PATHS=[[[10,20],[30,40]]];');
@@ -45,6 +45,7 @@ test('GIF artwork import preserves original animation bytes and creates contours
   const gifURL='data:image/gif;base64,R0lGODlh';
   const scope={};
   const context={window:scope,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},Image:class{naturalWidth=500;naturalHeight=281;async decode(){}},document:{createElement:()=>({getContext:()=>({fillRect(){},drawImage(){},getImageData:()=>({data:rgba})}),toDataURL:()=> 'data:image/png;base64,static'})},FileReader:class{readAsDataURL(){this.result=gifURL;this.onload();}}};
+  for(const file of ['locales/en.js','i18n.js'])vm.runInNewContext(await readFile(new URL(file,root),'utf8'),context);
   vm.runInNewContext(source,context);
   const imported=await scope.imageSettings.importImage({size:6,type:'image/gif'},'artwork');
   assert.equal(imported.artwork,gifURL);

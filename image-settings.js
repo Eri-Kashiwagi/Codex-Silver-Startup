@@ -1,6 +1,7 @@
 /* Local image import and one-time contour tracing. No network or app privileges. */
 (function (scope) {
   'use strict';
+  const t=key=>scope.SilverI18n.t(key);
   const plane=typeof document==='undefined'?null:document.querySelector?.('.line-art');
   const artWidth=plane?.width||1920,artHeight=plane?.height||1080;
   function vectorize(rgba, width, height) {
@@ -50,14 +51,14 @@
         const db=open.result,tx=db.transaction('settings',action==='read'?'readonly':'readwrite'),store=tx.objectStore('settings');
         const request=action==='read'?store.get('images'):store.put(value,'images');
         tx.oncomplete=()=>{db.close();resolve(action==='read'?request.result||{}:value);};
-        tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||new Error('保存失败'));};
+        tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||new Error(t('storageError')));};
       };
     });
   }
   async function importImage(file,kind){
-    if(file.size>30*1024*1024)throw new Error('请选择小于 30 MB 的图片。');
+    if(file.size>30*1024*1024)throw new Error(t('imageTooLarge'));
     const animated=kind==='artwork'&&file.type==='image/gif';
-    if(!animated&&!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error(kind==='artwork'?'请选择 PNG、JPEG、WebP 或 GIF 图片。':'请选择 PNG、JPEG 或 WebP 图片。');
+    if(!animated&&!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error(t(kind==='artwork'?'artworkType':'avatarType'));
     const url=URL.createObjectURL(file),img=new Image();
     try{
       img.src=url;await img.decode();
@@ -71,22 +72,22 @@
       const small=document.createElement('canvas');small.width=960;small.height=540;
       const smallCtx=small.getContext('2d',{willReadFrequently:true});smallCtx.drawImage(canvas,0,0,960,540);
       const contours=vectorize(smallCtx.getImageData(0,0,960,540).data,960,540);
-      if(!contours.length)throw new Error('图片轮廓太少，请选择边缘更清晰的背景。');
+      if(!contours.length)throw new Error(t('contoursFew'));
       // Trace one frame, but keep the original GIF so its animation survives saving.
       const artwork=animated?await new Promise((resolve,reject)=>{
         const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file);
       }):image;
       return {artwork,contours};
-    }catch(error){throw new Error(error.message||'图片无法读取，请换一张图片。');}
+    }catch(error){throw new Error(error.message||t('imageUnreadable'));}
     finally{URL.revokeObjectURL(url);}
   }
   async function importVideo(file){
-    if(!['video/mp4','video/webm'].includes(file.type))throw new Error('请选择 MP4 或 WebM 视频。');
-    if(file.size>64*1024*1024)throw new Error('请选择小于 64 MB 的视频。');
+    if(!['video/mp4','video/webm'].includes(file.type))throw new Error(t('videoType'));
+    if(file.size>64*1024*1024)throw new Error(t('videoTooLarge'));
     const url=URL.createObjectURL(file),video=document.createElement('video');
     try{
-      await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=()=>reject(new Error('视频无法解码，请使用 H.264 MP4 或 WebM。'));video.src=url;});
-      if(!video.videoWidth||!video.videoHeight)throw new Error('视频画面尺寸无效。');
+      await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=()=>reject(new Error(t('videoDecode')));video.src=url;});
+      if(!video.videoWidth||!video.videoHeight)throw new Error(t('videoDimensions'));
       return {backgroundVideo:file,backgroundVideoName:file.name};
     }finally{video.removeAttribute('src');video.load();URL.revokeObjectURL(url);}
   }
