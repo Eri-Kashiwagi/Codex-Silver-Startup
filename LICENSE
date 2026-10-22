@@ -1,0 +1,22 @@
+License scope
+
+This project contains inherited code from lilhuu/Codex-Startup-Windows at
+10d986ca532564a7546c32838567eb01e94ef2dd, including code inherited from
+M1ddle0/codex-startup-animation and its parent repository.
+
+The referenced upstream version does not include an explicit license for
+that inherited code. This file does not grant new rights to that code or
+represent that the entire combined project is licensed under MIT.
+The license and redistribution permissions for the inherited code remain
+unresolved. Attribution records its origin and does not grant those rights.
+
+The MIT license in licenses/MIT-new-components.txt applies only to the
+standalone newly added extension/video-wallpaper.mjs,
+extension/default-video.mjs, tools/build-release.ps1,
+tools/verify-package.ps1, and newly written documentation in this project.
+It does not relicense inherited files or modifications within those files.
+
+Media files have a separate scope described in media/MEDIA_NOTICE.md.
+See THIRD_PARTY_NOTICES.md for source repositories and pinned versions.
+
+The combined project is not covered by a single open-source license.

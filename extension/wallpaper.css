@@ -1,0 +1,59 @@
+/* One stationary wallpaper beneath the native app surfaces. No blur or frame loop.
+   Layout anchors and token names verified against Codex 26.924.22138. */
+html[data-aemeath-skin]{
+  --aemeath-base:20 18 24;
+  --app-color-background-surface:transparent!important;
+  --app-color-background-surface-under:transparent!important;
+  --app-color-background-editor-opaque:rgb(var(--aemeath-base)/.32)!important;
+  --app-color-background-card:rgb(var(--aemeath-base)/.32)!important;
+  --color-token-side-bar-background:transparent!important;
+  --color-token-bg-primary:transparent!important;
+  --color-token-main-surface-primary:transparent!important;
+  --color-surface:transparent!important;
+  --color-surface-secondary:transparent!important;
+  --color-surface-tertiary:rgb(var(--aemeath-base)/.32)!important;
+  --chat-background-color:transparent!important;
+  --composer-background-color:rgb(var(--aemeath-base)/.68)!important;
+  --app-shell-panel-background:transparent!important;
+  --app-shell-tab-background:rgb(var(--aemeath-base)/.32)!important;
+  background:rgb(var(--aemeath-base))!important;
+}
+html[data-aemeath-skin] body{
+  background-color:rgb(var(--aemeath-base))!important;
+  background-image:linear-gradient(rgb(var(--aemeath-base)/var(--aemeath-wash,.58)),rgb(var(--aemeath-base)/var(--aemeath-wash,.58))),var(--aemeath-wallpaper)!important;
+  background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-attachment:fixed!important;
+}
+html[data-aemeath-skin] :is(#root,[data-app-shell-frame],[data-app-shell-page-surface=true]){background:transparent!important}
+html[data-aemeath-skin] .app-shell-left-panel{background:rgb(var(--aemeath-base)/.18)!important}
+/* Dream Skin's stable surface and composer anchors, scoped to this appearance. */
+html[data-aemeath-skin]{--aemeath-base:24 15 42}
+html[data-aemeath-skin]{
+  color-scheme:dark!important;color:#f2eafb!important;
+  --color-text:#f2eafb;--color-text-primary:#f2eafb;--color-text-emphasis:#f2eafb;
+  --color-text-secondary:#cbbfdf;--color-text-tertiary:#cbbfdf;
+  --color-text-primary-ghost:#f2eafb;--color-text-primary-ghost-hover:#ffffff;
+  --color-text-secondary-ghost:#cbbfdf;--color-text-secondary-ghost-hover:#ffffff;
+  --color-text-toolbar-action:#e7dcfa;--color-text-user-message:#f2eafb;
+  --color-text-composer-primary:#f2eafb;--color-text-composer-secondary:#cbbfdf;
+  --color-token-foreground:#f2eafb;--color-token-text-primary:#f2eafb;--color-token-text-secondary:#cbbfdf;
+  --color-token-text-tertiary:#cbbfdf;--color-token-muted-foreground:#cbbfdf;
+  --input-placeholder-text-color:#b9abc9;
+  --color-background-composer:rgb(34 24 55/.78);--color-background-composer-action-bar:rgb(34 24 55/.78);
+  --color-background-panel:rgb(34 24 55/.78);--color-token-dropdown-background:#241b35;
+}
+html[data-aemeath-skin] body{color:#f2eafb!important}
+html[data-aemeath-skin] #root{position:relative;z-index:1}
+html[data-aemeath-skin] main:is([data-app-shell-main-surface],[class*="_MainContentSurface_"]),
+html[data-aemeath-skin] [role="main"],
+html[data-aemeath-skin] header:is([data-app-shell-header-edge-scroll],[class*="_Header_"]){background:transparent!important}
+html[data-aemeath-skin] :is([class*="_ComposerLayoutRoot_"],[data-composer-surface-variant][data-composer-radius-variant]){
+  background:rgb(34 24 55/.76)!important;border-color:rgb(165 139 220/.18)!important;
+}
+/* Menus, dialogs and floating panels keep their original opaque theme tokens. */
+
+/* Restore the actual native theme after the one-shot clip. These transitions
+   animate real app surfaces; no replacement white UI or screenshot is drawn. */
+html[data-aemeath-restoring] #root{position:relative;z-index:1}
+html[data-aemeath-restoring],html[data-aemeath-restoring] :is(body,#root,#root *){
+  transition:background-color 1800ms ease,color 1800ms ease,border-color 1800ms ease!important;
+}
