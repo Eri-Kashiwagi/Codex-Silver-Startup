@@ -4,7 +4,7 @@ export function installRenderer(payload, mount, createMotion) {
   if(window.__aemeathExtension){if(payload.openSettings)window.__aemeathExtension.openSettings();return {installed:true,alreadyActive:true};}
   let frame=null,watchdog=0,observer=null,priorFocus=null,disposed=false;
   let ready=false,completed=false,phase='loading',wallpaperURL=null,lastImage=null,settingsRequested=false;
-  let liveMotion=null,restoreTimer=0;
+  let liveMotion=null,restoreTimer=0,videoStartedAt=null;
   let defaultVideo=null,defaultInput=null,lastBackground=null;
   const root=document.documentElement;
   const before=new Map(['--aemeath-wallpaper','--aemeath-wash'].map(key=>[key,[root.style.getPropertyValue(key),root.style.getPropertyPriority(key)]]));
@@ -72,7 +72,7 @@ export function installRenderer(payload, mount, createMotion) {
     }
     if(strength>0&&typeof createMotion==='function'){
       liveMotion=createMotion({video:data.video||defaultVideo,strength,motion:data.motion!==false,autoplay:false,onFinish:restoreNative});
-      if(completed&&!frame)liveMotion.setActive?.(true);
+      if(completed&&!frame)liveMotion.setActive?.(true,Math.max(0,performance.now()-(videoStartedAt??performance.now()))/1000);
     }
   }
   function show(settings=false){
@@ -80,7 +80,7 @@ export function installRenderer(payload, mount, createMotion) {
     if(frame){if(settings){settingsRequested=true;frame.contentWindow.AEMEATH_OPEN_SETTINGS=true;frame.contentWindow.launcherUI?.openSettings();}return;}
     settingsRequested=settings;
     liveMotion?.setActive?.(false);
-    ready=false;completed=false;
+    ready=false;completed=false;videoStartedAt=null;
     priorFocus=document.activeElement;phase=settings?'settings':'loading';
     frame=document.createElement('iframe');frame.id='aemeath-extension-overlay';frame.title='Startup animation';
     Object.assign(frame.style,{position:'fixed',inset:'0',width:'100%',height:'100%',border:'0',zIndex:'2147483646',background:'transparent',colorScheme:'dark'});
@@ -106,11 +106,16 @@ export function installRenderer(payload, mount, createMotion) {
     if(!frame||event.source!==frame.contentWindow||event.data?.type!=='aemeath-boot')return;
     const data=event.data;
     if(data.action==='background')background(data);
-    if(data.action==='ready'){ready=true;phase='playing';}
-    if(data.action==='complete'){completed=true;phase='complete';removeOverlay();liveMotion?.setActive?.(true);}
+    if(data.action==='ready'){ready=true;phase='playing';clearTimeout(watchdog);watchdog=0;}
+    if(data.action==='complete'){
+      completed=true;phase='complete';removeOverlay();
+      const lateBy=Math.max(0,Number.isFinite(data.lateBy)?data.lateBy:0);
+      videoStartedAt=performance.now()-lateBy;
+      liveMotion?.setActive?.(true,lateBy/1000);
+    }
     if(data.action==='assetError'){phase='failed';removeOverlay();}
     if(data.action==='settings-open'){phase='settings';clearTimeout(watchdog);}
-    if(data.action==='settings-close'){phase='playing';watchdog=setTimeout(removeOverlay,25000);}
+    if(data.action==='settings-close'){phase='playing';clearTimeout(watchdog);watchdog=0;}
     if(data.action==='restore')dispose();
   }
   function keyboard(event){

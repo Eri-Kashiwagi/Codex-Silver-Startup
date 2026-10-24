@@ -19,7 +19,7 @@ Keep all files together. The `source.zip` package is for development; ordinary u
 
 **English is the default.** The settings interface supports English, Simplified Chinese, Traditional Chinese, Japanese and Russian. Select a language and click **Save and preview** to remember it on this device. Closing settings discards unsaved changes. Your own text is preserved when switching languages.
 
-The opening sequence lasts about 12 seconds and can be skipped with Esc. The character video then plays once, pauses while the window is hidden, and fades out to restore the previous appearance when it ends.
+The opening sequence lasts about 12 seconds and can be skipped with Esc. The character video then plays once and fades out to restore the previous appearance when it ends. Both sequences continue their timeline while the window is hidden or in the background; returning catches up to the elapsed time. Manual pause and opening settings still pause playback.
 
 Images can be up to 30 MiB; MP4 / WebM videos up to 64 MiB. H.264 MP4 is recommended. The opening images and subsequent video are configured separately. Personal imports stay on this device. The bundled video is silent.
 

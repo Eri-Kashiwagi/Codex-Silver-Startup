@@ -13,7 +13,7 @@
 | [Fei-Away/Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin) | [6fc42df48a6a5365011f55cc349e20c038e56d1d](https://github.com/Fei-Away/Codex-Dream-Skin/tree/6fc42df48a6a5365011f55cc349e20c038e56d1d) | 外观、透明面板与运行环境处理参考 |
 | [mytjxs/codex-startup-animation](https://github.com/mytjxs/codex-startup-animation) | [v1.0.0](https://github.com/mytjxs/codex-startup-animation/releases/tag/v1.0.0) | 启动动画与视频播放思路参考 |
 
-本次修改包括：加入 ChatGPT 娘化形象的图片与线稿、独立工作区视频、默认 MP4 载入、开屏结束后单次播放、设置和隐藏时暂停、结束后恢复原有外观，以及独立的便携发行构建。
+本次修改包括：加入 ChatGPT 娘化形象的图片与线稿、独立工作区视频、默认 MP4 载入、开屏结束后单次播放、设置时暂停、后台继续推进、结束后恢复原有外观，以及独立的便携发行构建。
 
 本项目为独立便携启动器，不依赖外部桌宠或既有本机状态。图片与视频设置使用独立的本机命名空间。
 

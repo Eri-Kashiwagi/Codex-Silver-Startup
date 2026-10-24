@@ -13,8 +13,8 @@
   const hud = $('.hud'), intro = $('.intro'), sweep = $('.light-sweep');
   const slider = $('#timeline'), pause = $('#pause'), subtitle = $('.subtitle');
   slider.max=String(duration/1000);
-  let playing = false, elapsed = 0, origin = 0, frame = 0, lastUI = -Infinity;
-  let completed = false, hiddenPause = false, mode = 'preview', loaded = false, revealed = false;
+  let playing = false, elapsed = 0, origin = 0, frame = 0, wakeTimer = 0, lastUI = -Infinity;
+  let completed = false, mode = 'preview', loaded = false, revealed = false;
   const clamp = n => Math.max(0, Math.min(1, n));
   const smooth = n => { const t = clamp(n); return t*t*(3-2*t); };
   const send = (action, details={}) => {
@@ -250,20 +250,29 @@
     }
   }
   function updateButton() { pause.textContent=t(completed?'ended':playing?'pause':'resume'); root.dataset.playing=String(playing); }
-  function stop() { playing=false; cancelAnimationFrame(frame); frame=0; updateButton(); }
-  function finish(skipped=false) {
+  function cancelTick(){cancelAnimationFrame(frame);clearTimeout(wakeTimer);frame=0;wakeTimer=0;}
+  function scheduleTick(){
+    if(document.hidden)wakeTimer=setTimeout(()=>tick(performance.now()),200);
+    else frame=requestAnimationFrame(tick);
+  }
+  function stop() { playing=false;cancelTick();updateButton(); }
+  function finish(skipped=false,lateBy=0) {
     stop(); elapsed=duration; render(elapsed); completed=true;
     root.classList.add('finished'); root.dataset.completed='true';
     pause.textContent=t('ended'); pause.disabled=true;
     $('.end-description').dataset.i18n=mode==='launch'?'showingCodex':skipped?'skipped':'previewFinished';
     $('.end-description').textContent=t($('.end-description').dataset.i18n);
-    send('complete');
+    send('complete',{lateBy});
   }
   function tick(now) {
     if(!playing)return;
-    elapsed=Math.min(duration,now-origin); render(elapsed);
-    if(elapsed>=duration){finish();return;}
-    frame=requestAnimationFrame(tick);
+    frame=0;wakeTimer=0;
+    const actual=now-origin;
+    elapsed=Math.min(duration,actual);
+    // Hidden pages need timekeeping, not a full canvas redraw on each wake-up.
+    if(!document.hidden)render(elapsed);
+    if(elapsed>=duration){finish(false,Math.max(0,actual-duration));return;}
+    scheduleTick();
   }
   function warmIdentityTexture(){
     if(reduced||identityTexture||elapsed>=4740)return;
@@ -278,13 +287,13 @@
     warmIdentityTexture();
     completed=false; root.classList.remove('finished'); root.dataset.completed='false';
     pause.disabled=false; origin=performance.now()-elapsed; playing=true;updateButton();
-    cancelAnimationFrame(frame);frame=requestAnimationFrame(tick);
+    cancelTick();scheduleTick();
   }
-  function replay(){revealed=false;hiddenPause=false;stop();elapsed=0;lastUI=-Infinity;render(0);play();}
+  function replay(){revealed=false;stop();elapsed=0;lastUI=-Infinity;render(0);play();}
   $('#replay').addEventListener('click',replay);$('.replay-end').addEventListener('click',replay);
-  pause.addEventListener('click',()=>{hiddenPause=false;if(playing){elapsed=Math.min(duration,performance.now()-origin);stop();render(elapsed);}else play();});
+  pause.addEventListener('click',()=>{if(playing){elapsed=Math.min(duration,performance.now()-origin);stop();render(elapsed);}else play();});
   $('.skip').addEventListener('click',()=>finish(true));
-  slider.addEventListener('input',()=>{hiddenPause=false;stop();elapsed=Number(slider.value)*1000;warmIdentityTexture();if(elapsed>=duration){finish();return;}lastUI=-Infinity;completed=false;root.classList.remove('finished');root.dataset.completed='false';pause.disabled=false;render(elapsed);});
+  slider.addEventListener('input',()=>{stop();elapsed=Number(slider.value)*1000;warmIdentityTexture();if(elapsed>=duration){finish();return;}lastUI=-Infinity;completed=false;root.classList.remove('finished');root.dataset.completed='false';pause.disabled=false;render(elapsed);});
   window.addEventListener('keydown',event=>{
     if((event.metaKey||event.ctrlKey)&&event.altKey&&event.code==='KeyB'){
       event.preventDefault();if(!$('#settings-dialog').open)openSettings();return;
@@ -294,9 +303,7 @@
     if(event.code==='Space'&&event.target.tagName!=='INPUT'&&event.target.tagName!=='BUTTON'){event.preventDefault();pause.click();}
   });
   document.addEventListener('visibilitychange',()=>{
-    if(native)return;
-    if(document.hidden&&playing){elapsed=Math.min(duration,performance.now()-origin);hiddenPause=true;stop();}
-    else if(!document.hidden&&hiddenPause&&!completed){hiddenPause=false;play();}
+    if(playing){cancelTick();tick(performance.now());}
   });
   // Narrow native bridge: the host may select launch mode or report its own launch error.
   window.launcherUI={
@@ -334,7 +341,7 @@
   }
   function openSettings(){
     if(mode==='launch'||settings.open)return;
-    hiddenPause=false;stop();pendingImages={...savedImages};applyLanguage(pendingImages);thumbnails();
+    stop();pendingImages={...savedImages};applyLanguage(pendingImages);thumbnails();
     status.textContent=t('editing');
     settings.returnValue='';settings.showModal();send('settings-open');
   }

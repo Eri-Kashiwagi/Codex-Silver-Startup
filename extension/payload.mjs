@@ -18,7 +18,7 @@ export async function buildInjection(root,{openSettings=false}={}){
     .replace(/<meta\b[^>]*http-equiv[^>]*>/ig,'').replace(/src="assets\/[^"]*"/g,'src=""'),
     css:css.toString(),skin:skin.toString(),assets:{avatar:'data:image/jpeg;base64,'+avatar.toString('base64'),artwork:'data:'+artworkMime+';base64,'+artwork.toString('base64')}};
   // Bind animation globals to the temporary iframe so removing it stops its work.
-  const mount=`function(window){const document=window.document,location=window.location,performance=window.performance,indexedDB=window.indexedDB,Image=window.Image,Path2D=window.Path2D,URL=window.URL,module=undefined;const requestAnimationFrame=window.requestAnimationFrame.bind(window),cancelAnimationFrame=window.cancelAnimationFrame.bind(window);\n${translations.join('\n')}\n${settings}\n${contours}\n${animation}\n}`;
+  const mount=`function(window){const document=window.document,location=window.location,performance=window.performance,indexedDB=window.indexedDB,Image=window.Image,Path2D=window.Path2D,URL=window.URL,module=undefined;const requestAnimationFrame=window.requestAnimationFrame.bind(window),cancelAnimationFrame=window.cancelAnimationFrame.bind(window),setTimeout=window.setTimeout.bind(window),clearTimeout=window.clearTimeout.bind(window);\n${translations.join('\n')}\n${settings}\n${contours}\n${animation}\n}`;
   payload.assets.wallpaper=wallpaper?'data:image/jpeg;base64,'+wallpaper.toString('base64'):payload.assets.artwork;
   return `(${installRenderer.toString()})(${JSON.stringify(payload)},${mount},${createVideoWallpaper.toString()})`;
 }
